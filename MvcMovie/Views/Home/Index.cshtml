@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MvcMovie.Models.GeoTask>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<div class = "container">
+    <h2>Список заявок</h2>
+    <p><a asp-action="AddGeoTask">Зарегистрировать заявку</a></p> 
+    <p><a asp-action="GetMonthInfo">Посмотреть информацию за текущий месяц</a></p> 
+    <table class="table">
+        <tr><th>Номер</th><th>Описание</th><th>Статус</th><th>День начала</th><th>День окончания</th><th>Примечания</th><th>Бригада</th><th></th><th></th></tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Description</td>            
+                <td>@item.Status</td>           
+                <td>@item.DayBegin</td>            
+                @if (item.Status == "Завершено")
+                {
+                    <td>@item.DayEnd</td>
+                    <td>@item.Note</td>                                
+                    <td>Бригада №@item.Group</td>
+                }
+                @if (item.Status != "Завершено")
+                {
+                    <td>---</td>
+                    <td>---</td>
+                    @if (@item.Group == 0)            
+                    {
+                        <td><a asp-action="ChooseGroup" asp-controller="Home" asp-route-id="@item.Id">Назначить бригаду</a></td>
+                    }
+                    @if (@item.Group != 0)
+                    {
+                        <td>Бригада №@item.Group</td>
+                    }
+                }                
+                <td><a asp-action="DeleteGeoTask" asp-controller="Home" asp-route-id="@item.Id">Удалить задачу</a></td>
+                <td>
+                @if (item.Status != "Завершено")
+                {
+                    <a asp-action="FinishGeoTask" asp-controller="Home" asp-route-id="@item.Id">Завершить задачу</a>
+                }   
+                </td>           
+            </tr>
+        }
+    </table>
+</div>
